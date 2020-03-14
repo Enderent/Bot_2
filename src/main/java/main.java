@@ -15,6 +15,7 @@ public class main extends ListenerAdapter {
         public static void main(String[] args) throws LoginException {
             JDABuilder builder = new JDABuilder(AccountType.BOT);
 
+            System.err.println("FFS");
             String token ="Njg4NDc2MTQ1MTYyNzgwNzAw.Xm03jw.lW8WG0by2OfjBe0Th3Q5vZtSh1c";
             builder.setToken(token);
 
