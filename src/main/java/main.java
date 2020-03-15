@@ -2,6 +2,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import javafx.scene.media.AudioTrack;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -19,15 +20,16 @@ public class main extends ListenerAdapter {
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = new JDABuilder(AccountType.BOT);
 
-        String token = "Njg4NDc2MTQ1MTYyNzgwNzAw.Xm1H0A.3n85MK47mYs84NVeVWoTBrNUKhw";
+        //login
+        String token = "Njg4NDc2MTQ1MTYyNzgwNzAw.Xm5CTQ.Piu0NqjNGtlRQUAHQNLrnPghAVM";
+        //
+
         builder.setToken(token);
         builder.addEventListeners(new main());
         builder.setActivity(Activity.watching("Killing of false gods"));
 
-        //lavaplayer impementation
-        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(playerManager);
-        AudioPlayer player = playerManager.createPlayer();
+
+
 
         builder.build();
 
@@ -36,6 +38,16 @@ public class main extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+
+        //lavaplayer impementation
+        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+        AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioPlayer player = playerManager.createPlayer();
+        TrackScheduler trackScheduler = new TrackScheduler();
+        player.addListener(trackScheduler);
+
+        AudioManager manager = event.getGuild().getAudioManager();
+
 
         if (event.getMessage().getContentRaw().equals(prfix + "Tek'ma'tek Teal'c")) {
             event.getChannel().sendMessage("Tek'ma'tek!" + " " + event.getAuthor().getName()).queue();
@@ -48,22 +60,24 @@ public class main extends ListenerAdapter {
                 //isclaimed = false;
             } //else
                 //isclaimed = true;
-            if (event.getMessage().getContentRaw().startsWith(prfix+"play")) {
+        }
+        if (event.getMessage().getContentRaw().startsWith(prfix+"play")) {
 
-                VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-                AudioManager manager = event.getGuild().getAudioManager();
-                manager.openAudioConnection(channel);
-
-
-
-
+            VoiceChannel channel = event.getMember().getVoiceState().getChannel();
+            manager.openAudioConnection(channel);
+            
+            //player.playTrack(track);
 
             }
 
-
+        if (event.getMessage().getContentRaw().startsWith(prfix+"leave")){
+            manager.closeAudioConnection();
         }
+
+
+
     }
 
 
-    }
+}
 
